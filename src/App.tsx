@@ -65,7 +65,7 @@ export default function App() {
             </svg>
           </div>
           <div>
-            <h1 className="text-sm font-extrabold tracking-[2px] uppercase text-primary">Nebula LiDAR</h1>
+            <h1 className="text-sm font-extrabold tracking-[2px] uppercase text-primary">Dolphin Lidar</h1>
             <div className="flex items-center gap-2">
               <span className="text-[11px] text-[#707a8c]">SCAN_A92_NORTH_VALLEY.las • 1.4 GB</span>
             </div>
