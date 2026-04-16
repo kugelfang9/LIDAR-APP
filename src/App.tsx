@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { LidarViewer } from './components/LidarViewer';
 import { ProcessingPipeline } from './components/ProcessingPipeline';
+import { DataManagement } from './components/DataManagement';
 import { generateMockLidarData, LidarPoint } from './lib/lidar-utils';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -73,12 +74,12 @@ export default function App() {
         </div>
         
         <div className="flex items-center gap-4">
+          <DataManagement points={points} onImport={(newPoints) => setPoints([...newPoints])} />
+          <Separator orientation="vertical" className="h-6 bg-[#2d333d]" />
           <div className="flex items-center gap-2 px-3 py-1 bg-[#1c1f26] rounded-full border border-[#2d333d]">
             <div className="w-1.5 h-1.5 rounded-full bg-[#00ff95] shadow-[0_0_8px_#00ff95]" />
             <span className="text-[10px] font-mono text-[#707a8c]">SYSTEM_READY</span>
           </div>
-          <Separator orientation="vertical" className="h-6 bg-[#2d333d]" />
-          <div className="text-[11px] text-[#707a8c]">Admin Mode</div>
         </div>
       </header>
 

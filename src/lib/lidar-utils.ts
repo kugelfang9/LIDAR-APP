@@ -72,3 +72,52 @@ export const CLASSIFICATION_COLORS: Record<number, number> = {
   7: 0xff0000, // Noise
   9: 0x0000ff, // Water
 };
+
+export const exportLidarData = (points: LidarPoint[], format: 'las' | 'csv' | 'json' | 'ply' | 'stl'): Blob => {
+  let content = '';
+  let mimeType = 'text/plain';
+
+  switch (format) {
+    case 'csv':
+      content = 'x,y,z,intensity,classification\n' + 
+        points.map(p => `${p.x},${p.y},${p.z},${p.intensity},${p.classification || 0}`).join('\n');
+      mimeType = 'text/csv';
+      break;
+    case 'json':
+      content = JSON.stringify(points, null, 2);
+      mimeType = 'application/json';
+      break;
+    case 'ply':
+      content = `ply\nformat ascii 1.0\nelement vertex ${points.length}\nproperty float x\nproperty float y\nproperty float z\nproperty float intensity\nend_header\n` +
+        points.map(p => `${p.x} ${p.y} ${p.z} ${p.intensity}`).join('\n');
+      break;
+    case 'stl':
+      // ASCII STL format
+      // Note: STL is triangle-based. For a point cloud, we represent each point as a tiny facet
+      // for 3D printing software to recognize the spatial bounds.
+      content = 'solid lidar_export\n';
+      // Only export a subset if too many points to avoid browser crash
+      const exportPoints = points.slice(0, 5000); 
+      exportPoints.forEach(p => {
+        content += `facet normal 0 0 0\n  outer loop\n    vertex ${p.x} ${p.y} ${p.z}\n    vertex ${p.x + 0.01} ${p.y} ${p.z}\n    vertex ${p.x} ${p.y + 0.01} ${p.z}\n  endloop\nendfacet\n`;
+      });
+      content += 'endsolid lidar_export';
+      mimeType = 'model/stl';
+      break;
+    case 'las':
+      // Mock LAS binary - in a real app we'd use a library like las-js
+      content = 'MOCK_LAS_BINARY_DATA';
+      mimeType = 'application/octet-stream';
+      break;
+  }
+
+  return new Blob([content], { type: mimeType });
+};
+
+export const LIDAR_DEVICES = [
+  { id: 'velodyne-vls128', name: 'Velodyne VLS-128', type: 'Mechanical' },
+  { id: 'ouster-os2', name: 'Ouster OS2', type: 'Digital' },
+  { id: 'livox-horizon', name: 'Livox Horizon', type: 'Solid-State' },
+  { id: 'hesai-at128', name: 'Hesai AT128', type: 'Hybrid' },
+  { id: 'generic-las', name: 'Generic LAS/LAZ File', type: 'File' },
+];
