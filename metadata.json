@@ -1,0 +1,6 @@
+{
+  "name": "PulseLidar",
+  "description": "Advanced LiDAR data processing and visualization suite with real-time pipeline monitoring.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
